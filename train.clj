@@ -16,7 +16,7 @@
    (->
     (arrow/stream->dataset "train.arrow" {:key-fn keyword})
     (tc/select-columns [:text :labels])
-    ;; (tc/head 102)
+    (tc/head 1)
     (tc/rows :as-seqs))))
 
 (def model ((py.- st ClassificationModel)
@@ -24,7 +24,7 @@
 
 
             :use_cuda true
-            :args {:silent true
+            :args {:silent false
                    :overwrite_output_dir true}))
 
 (println "start training")
