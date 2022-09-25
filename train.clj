@@ -16,14 +16,20 @@
    (->
     (arrow/stream->dataset "train.arrow" {:key-fn keyword})
     (tc/select-columns [:text :labels])
-    (tc/head 102)
+    ;; (tc/head 102)
     (tc/rows :as-seqs))))
 
 (def model ((py.- st ClassificationModel)
             "bert" "prajjwal1/bert-tiny"
 
 
-            :use_cuda false
-            :args {:overwrite_output_dir true}))
+            :use_cuda true
+            :args {:silent true
+                   :overwrite_output_dir true}))
 
-(def _ (py. model train_model pd-train))
+(println "start training")
+(println :result  (py. model train_model pd-train))
+
+(println "finished training")
+;; just in case
+(shutdown-agents)
