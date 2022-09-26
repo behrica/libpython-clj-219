@@ -28,6 +28,7 @@
   (->
    (arrow/stream->dataset "train.arrow" {:key-fn keyword})
    (tc/select-columns [:text :labels])))
+   
 
 
 
@@ -56,7 +57,10 @@
             :args {:use_multiprocessing false
                    :use_multiprocessing_for_evaluation false
                    :process_count 1
+                   :num_train_epochs 3
+                   :evaluate_during_training_steps 100
                    :evaluate_during_training true
+                   :evaluate_during_training_verbose true
                    :overwrite_output_dir true}))
                    
 
