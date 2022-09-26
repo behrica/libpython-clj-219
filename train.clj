@@ -7,10 +7,15 @@
 (require
          '[libpython-clj2.python :refer [py.- py.] :as py])
 
+;; should be "true" for tis code to work, enabled by java property libpython_clj.manual_gil=true
 (println "-------- manual-gil: " ffi/manual-gil)
-;; (py/initialize!)
 
+;; (py/initialize!)  ;; not needed in embedded, called by clojurebridge
+
+;; needed, because we use manual GIL management, enabled by java property libpython_clj.manual_gil=true
+;; without it, we get JVM crash
 (def gil (ffi/lock-gil))
+
 
 (def pd (py/import-module "pandas"))
 (def st (py/import-module "simpletransformers.classification"))
@@ -56,4 +61,6 @@
 (println :result  (py. model train_model pd-train :eval_df pd-eval))
 
 (println "finished training")
+;; needed, because we use manual GIL management, enabled by java property libpython_clj.manual_gil=true
+;; without it, it will hang forever
 (ffi/unlock-gil gil)
